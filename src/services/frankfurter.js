@@ -113,6 +113,53 @@ async function request(endpoint, options) {
 
   throw lastError ?? new Error("Gagal menghubungi Frankfurter");
 }
+
+/**
+ * Ambil kurs terbaru, memakai cache bila masih segar.
+ * @param {object} [options]
+ * @param {string} [options.from]
+ * @param {string} [options.to]
+ * @param {number} [options.ttl] masa berlaku cache dalam milidetik
+ * @param {boolean} [options.force] lewati cache dan panggil jaringan
+ * @returns {Promise<{ base: string, target: string, date: string, rate: number, cached: boolean }>}
+ */
+export async function fetchLatestRate({
+  from = "USD",
+  to = "IDR",
+  ttl = DEFAULT_TTL,
+  force = false,
+} = {}) {
+  const key = `latest:${from}:${to}`;
+
+  if (!force) {
+    const cached = readFreshCache(key, ttl);
+    if (cached) return { ...cached, cached: true };
+  }
+
+  const payload = await request("latest", { from, to });
+  const normalized = normalizeRate(payload, to);
+  if (!normalized) {
+    throw new Error(`Kurs ${from} ke ${to} tidak tersedia`);
+  }
+
+  writeCache(key, normalized);
+  return { ...normalized, cached: false };
+}
+
+/**
+ * Ambil kurs pada tanggal tertentu. Tidak memakai cache karena tanggal lampau tidak berubah.
+ * @param {string} date tanggal format YYYY-MM-DD
+ * @param {{ from?: string, to?: string }} [options]
+ */
+export async function fetchRateOnDate(date, { from = "USD", to = "IDR" } = {}) {
+  const payload = await request(date, { from, to });
+  const normalized = normalizeRate(payload, to);
+  if (!normalized) {
+    throw new Error(`Kurs ${from} ke ${to} pada ${date} tidak tersedia`);
+  }
+  return { ...normalized, cached: false };
+}
+
 /**
  * Daftar mata uang Frankfurter.
  * @returns {Promise<Array<{ kode: string, nama: string }>>}

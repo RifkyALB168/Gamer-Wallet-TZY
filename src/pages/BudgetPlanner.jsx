@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
+import GamePickerCard from "../components/budget/GamePickerCard";
 import QuickSummaryCard from "../components/budget/QuickSummaryCard";
 import RateBadge from "../components/budget/RateBadge";
 import SavingsInputCard from "../components/budget/SavingsInputCard";
@@ -16,6 +17,7 @@ export function BudgetPlanner({ games: gamesAwal }) {
   const timelineRef = useRef(null); // https://react.dev/reference/react/useRef
 
   const { rate, date, loading, error, source, refresh } = useExchangeRate();
+
   const totalWishlist = useMemo(
     () => totalHargaGameTerpilih(games, rate ?? 0),
     [games, rate],
@@ -97,6 +99,13 @@ export function BudgetPlanner({ games: gamesAwal }) {
               nominalBulanan={nominalBulanan}
               targetTercapai={targetTercapai}
               totalWishlist={totalWishlist}
+            />
+            <GamePickerCard
+              games={games}
+              onToggle={toggleGame}
+              onHapus={hapusGame}
+              rate={rate}
+              loadingKurs={loading}
             />
           </div>
         </div>
