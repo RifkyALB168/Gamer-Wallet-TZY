@@ -1,4 +1,5 @@
 import RateBadge from "../components/budget/RateBadge";
+import SavingsInputCard from "../components/budget/SavingsInputCard";
 import { mockGames } from "../data/mockGames";
 import { useBudget } from "../hooks/useBudget";
 import { useExchangeRate } from "../hooks/useExchangeRate";
@@ -47,7 +48,7 @@ export function BudgetPlanner({ games: gamesAwal }) {
   }, [totalWishlist]);
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100 sm:px-6 lg:px-10">
+    <main className="min-h-screen bg-gray-950 px-4 py-10 text-gray-100 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-6xl">
         <header className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -66,7 +67,27 @@ export function BudgetPlanner({ games: gamesAwal }) {
           onRefresh={refresh}
         />
 
-      </div>
+
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          <div className="space-y-6">
+            <SavingsInputCard
+              nominal={nominalBulanan}
+              onChange={setNominalBulanan}
+              onReset={reset}
+              onHitung={hitungEstimasi}
+            />
+            <QuickSummaryCard ringkasan={ringkasan} />
+            {pesanHitung && (
+              <p
+                role="status"
+                className="rounded-xl border border-gray-700 bg-gray-900/60 p-3 text-sm text-gray-300"
+              >
+                {pesanHitung}
+              </p>
+            )}
+          </div>
+
+        </div>
     </main>
   );
 }

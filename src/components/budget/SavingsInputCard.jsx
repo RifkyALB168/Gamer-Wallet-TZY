@@ -46,7 +46,6 @@ export function SavingsInputCard({ nominal, onChange, onReset, onHitung }) {
           </span>
           <div>
             <h2 className="text-lg font-semibold text-grey-100">Uang Jajan Bulanan</h2>
-            <p className="text-sm text-grey-400">Alokasikan batas aman jajan game</p>
           </div>
         </div>
         <span className="rounded-md border border-grey-700 px-2 py-1 text-xs font-medium text-grey-400">IDR</span>
@@ -94,7 +93,7 @@ export function SavingsInputCard({ nominal, onChange, onReset, onHitung }) {
         />
       </div>
 
-      <p className="mt-6 text-xs font-semibold tracking-widest text-grey-400">PRESET NOMINAL CEPAT</p>
+      <p className="mt-6 text-xs font-semibold tracking-widest text-grey-400">PRESET</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {PRESET_NOMINAL.map((nilai) => {
           const aktif = nilai === nominal;
@@ -119,10 +118,7 @@ export function SavingsInputCard({ nominal, onChange, onReset, onHitung }) {
         onClick={onHitung}
         className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 font-semibold text-grey-950 transition hover:bg-emerald-400"
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4" aria-hidden="true">
-          <path d="M13 2 4 14h6l-1 8 9-12h-6z" />
-        </svg>
-        Hitung Estimasi Waktu
+        Kalkulasikan
       </button>
 
       <div className="mt-4 flex items-center justify-between text-sm">
