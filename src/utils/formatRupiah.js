@@ -5,6 +5,16 @@ export function formatRupiah(value, { withPrefix = true } = {}) {
   return withPrefix ? `Rp ${teks}` : teks;
 }
 
+export function formatRupiahCompact(value) {
+  const angka = Number(value);
+  if (!Number.isFinite(angka)) return "Rp 0";
+
+  const abs = Math.abs(angka);
+  if (abs >= 1_000_000_000) return `Rp ${trimZero(angka / 1_000_000_000)}M`;
+  if (abs >= 1_000_000) return `Rp ${trimZero(angka / 1_000_000)}jt`;
+  if (abs >= 1_000) return `Rp ${trimZero(angka / 1_000)}rb`;
+  return formatRupiah(angka);
+}
 
 export function usdKeRupiah(usd, rate) {
   const nilaiUsd = Number(usd);
