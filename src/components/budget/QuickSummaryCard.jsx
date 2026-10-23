@@ -19,13 +19,13 @@ export function QuickSummaryCard({ ringkasan }) {
   ];
 
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
-      <p className="text-xs font-semibold tracking-widest text-slate-400">RINGKASAN</p>
-      <dl className="mt-4 grid grid-cols-3 divide-x divide-slate-800 text-center">
+    <section className="rounded-2xl border border-stone-800 bg-stone-900/60 p-5">
+      <p className="text-xs font-semibold tracking-widest text-stone-400">RINGKASAN</p>
+      <dl className="mt-4 grid grid-cols-3 divide-x divide-stone-800 text-center">
         {item.map(({ label, nilai }) => (
           <div key={label} className="px-2">
-            <dt className="text-xs text-slate-500">{label}</dt>
-            <dd className="mt-1 text-sm font-semibold text-slate-100 sm:text-base">{nilai}</dd>
+            <dt className="text-xs text-stone-500">{label}</dt>
+            <dd className="mt-1 text-sm font-semibold text-stone-100 sm:text-base">{nilai}</dd>
           </div>
         ))}
       </dl>

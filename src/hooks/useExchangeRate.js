@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FALLBACK_USD_IDR, fetchLatestRate } from "../services/frankfurter";
 
-// Permintaan yang sedang berjalan, dibagi antar komponen. without thsi 5 card game yang memakai hook ini akan memanggil API lima kali.
+// Permintaan yang sedang berjalan, dibagi antar komponen. Tanpa ini 5 kartu game akan memanggil API lima kali.
 const inflight = new Map();
 
 /**
@@ -20,8 +20,6 @@ const inflight = new Map();
  * @returns {{
  *   rate: number | null,
  *   date: string | null,
- *   base: string,
- *   target: string,
  *   loading: boolean,
  *   error: string | null,
  *   source: "jaringan" | "cache" | "fallback" | null,
@@ -42,54 +40,45 @@ export function useExchangeRate({
     source: null,
   });
 
-  const mounted = useRef(true);
-  const [nonce, setNonce] = useState(0);
+  // Naik satu tiap tombol "Perbarui" ditekan, supaya kurs diambil ulang dari jaringan.
+  const [paksa, setPaksa] = useState(0);
 
   useEffect(() => {
-    mounted.current = true;
+    const key = `${from}:${to}:${paksa}`;
 
-    const key = `${from}:${to}`;
     if (!inflight.has(key)) {
       inflight.set(
         key,
-        fetchLatestRate({ from, to, ttl }).finally(() => {
+        fetchLatestRate({ from, to, ttl, force: paksa > 0 }).finally(() => {
           inflight.delete(key);
         }),
       );
     }
 
-    inflight
-      .get(key)
-      .then((hasil) => {
-        if (!mounted.current) return;
+    inflight.get(key).then(
+      (hasil) =>
         setState({
           rate: hasil.rate,
           date: hasil.date,
           loading: false,
           error: null,
           source: hasil.cached ? "cache" : "jaringan",
-        });
-      })
-      .catch((error) => {
-        if (!mounted.current) return;
+        }),
+      (error) =>
         setState({
           rate: fallbackRate,
           date: null,
           loading: false,
           error: error?.message ?? "Kurs tidak dapat diambil",
           source: "fallback",
-        });
-      });
-
-    return () => {
-      mounted.current = false;
-    };
-  }, [from, to, ttl, fallbackRate, nonce]);
+        }),
+    );
+  }, [from, to, ttl, fallbackRate, paksa]);
 
   const refresh = useCallback(() => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
-    setNonce((n) => n + 1);
+    setPaksa((n) => n + 1);
   }, []);
 
-  return { ...state, base: from, target: to, refresh };
+  return { ...state, refresh };
 }

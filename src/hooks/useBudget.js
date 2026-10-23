@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   buatTimelineTabungan,
   hitungBulanMenabung,
@@ -8,15 +8,19 @@ import {
 const STORAGE_KEY = "gw:budget:v1"; // https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
 const DEFAULT_NOMINAL = 0;
 
+/** Bulatkan ke rupiah utuh, nilai negatif atau bukan angka jadi 0. */
+function keRupiah(nilai) {
+  const angka = Math.round(Number(nilai));
+  return Number.isFinite(angka) && angka > 0 ? angka : 0;
+}
+
 /** Baca simpanan budget dari localStorage. */
 function bacaSimpanan() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" ? parsed : null;
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return parsed && typeof parsed === "object" ? parsed : {};
   } catch {
-    return null;
+    return {};
   }
 }
 
@@ -46,15 +50,12 @@ export function useBudget({
   nominalAwal = DEFAULT_NOMINAL,
   maksBulan = 12,
 } = {}) {
-  const simpanan = useMemo(() => bacaSimpanan(), []);
-
   const [nominalBulanan, setNominalState] = useState(
-    () => Number(simpanan?.nominalBulanan) || nominalAwal,
+    () => keRupiah(bacaSimpanan().nominalBulanan) || nominalAwal,
   );
-  const [uangSaku, setUangSakuState] = useState(
-    () => Number(simpanan?.uangSaku) || 0,
+  const [uangSaku, setUangSakuState] = useState(() =>
+    keRupiah(bacaSimpanan().uangSaku),
   );
-  // https://stackoverflow.com/questions/71925654/difference-between-useeffect-and-usememo
 
   useEffect(() => {
     try {
@@ -67,45 +68,30 @@ export function useBudget({
     }
   }, [nominalBulanan, uangSaku]);
 
-  /** Pastikan nominal selalu angka bulat dan tidak negatif. */
-  const setNominalBulanan = useCallback((value) => {
-    const angka = Math.round(Number(value));
-    setNominalState(Number.isFinite(angka) && angka > 0 ? angka : 0);
-  }, []);
-
-  const setUangSaku = useCallback((value) => {
-    const angka = Math.round(Number(value));
-    setUangSakuState(Number.isFinite(angka) && angka > 0 ? angka : 0);
-  }, []);
+  const setNominalBulanan = useCallback(
+    (nilai) => setNominalState(keRupiah(nilai)),
+    [],
+  );
+  const setUangSaku = useCallback(
+    (nilai) => setUangSakuState(keRupiah(nilai)),
+    [],
+  );
 
   const reset = useCallback(() => {
     setNominalState(nominalAwal);
     setUangSakuState(0);
   }, [nominalAwal]);
 
-  const jumlahBulan = useMemo(
-    () => hitungBulanMenabung(totalWishlist, nominalBulanan),
-    [totalWishlist, nominalBulanan],
-  );
-
-  const timeline = useMemo(
-    () =>
-      buatTimelineTabungan({
-        totalTarget: totalWishlist,
-        tabunganPerBulan: nominalBulanan,
-        maksBulan,
-      }),
-    [totalWishlist, nominalBulanan, maksBulan],
-  );
-
-  const ringkasan = useMemo(
-    () =>
-      hitungRingkasanBudget({
-        totalTarget: totalWishlist,
-        tabunganPerBulan: nominalBulanan,
-      }),
-    [totalWishlist, nominalBulanan],
-  );
+  const jumlahBulan = hitungBulanMenabung(totalWishlist, nominalBulanan);
+  const timeline = buatTimelineTabungan({
+    totalTarget: totalWishlist,
+    tabunganPerBulan: nominalBulanan,
+    maksBulan,
+  });
+  const ringkasan = hitungRingkasanBudget({
+    totalTarget: totalWishlist,
+    tabunganPerBulan: nominalBulanan,
+  });
 
   return {
     nominalBulanan,
@@ -116,6 +102,6 @@ export function useBudget({
     jumlahBulan,
     timeline,
     ringkasan,
-    targetTercapai: jumlahBulan !== Infinity && totalWishlist > 0,
+    targetTercapai: totalWishlist > 0 && Number.isFinite(jumlahBulan),
   };
 }

@@ -7,7 +7,7 @@ function Cover({ game }) {
 
   if (gagal || !game.cover) {
     return (
-      <span className="flex h-9 w-16 shrink-0 items-center justify-center rounded-md bg-gray-800 text-xs font-bold text-gray-400">
+      <span className="flex h-9 w-16 shrink-0 items-center justify-center rounded-md bg-stone-800 text-xs font-bold text-stone-400">
         {game.judul?.slice(0, 2).toUpperCase() ?? "??"}
       </span>
     );
@@ -36,18 +36,18 @@ function Cover({ game }) {
  */
 export function GamePickerCard({ games, onToggle, onHapus, rate, loadingKurs = false }) {
   return (
-    <section className="rounded-2xl border border-gray-800 bg-gray-900/60 p-6">
+    <section className="rounded-2xl border border-stone-800 bg-stone-900/60 p-6">
       <header className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <div>
-            <h2 className="text-lg font-semibold text-gray-100">Game Pilihan untuk Dihitung</h2>
-            <p className="text-sm text-gray-400">Pilih game mana saja yang ingin dimasukkan ke kalkulator</p>
+            <h2 className="text-lg font-semibold text-stone-100">Game Pilihan untuk Dihitung</h2>
+            <p className="text-sm text-stone-400">Pilih game mana saja yang ingin dimasukkan ke kalkulator</p>
           </div>
         </div>
       </header>
 
       {games.length === 0 ? (
-        <p className="mt-6 rounded-xl border border-dashed border-gray-700 p-6 text-center text-sm text-gray-400">
+        <p className="mt-6 rounded-xl border border-dashed border-stone-700 p-6 text-center text-sm text-stone-400">
           Belum ada game di daftar. Tambahkan dari halaman Cari Game atau Wishlist.
         </p>
       ) : (
@@ -55,7 +55,7 @@ export function GamePickerCard({ games, onToggle, onHapus, rate, loadingKurs = f
           {games.map((game) => (
             <li
               key={game.id}
-              className="flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-950/50 p-3"
+              className="flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-950/50 p-3"
             >
               <input
                 type="checkbox"
@@ -67,10 +67,10 @@ export function GamePickerCard({ games, onToggle, onHapus, rate, loadingKurs = f
               <Cover game={game} />
 
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-gray-100">{game.judul}</p>
+                <p className="truncate text-sm font-semibold text-stone-100">{game.judul}</p>
                 <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
                   {game.toko && (
-                    <span className="rounded border border-gray-700 px-1.5 py-0.5 text-gray-400">
+                    <span className="rounded border border-stone-700 px-1.5 py-0.5 text-stone-400">
                       {game.toko}
                     </span>
                   )}
@@ -79,7 +79,7 @@ export function GamePickerCard({ games, onToggle, onHapus, rate, loadingKurs = f
                       Diskon -{game.diskonPersen}%
                     </span>
                   )}
-                  {game.catatan && <span className="text-gray-500">{game.catatan}</span>}
+                  {game.catatan && <span className="text-stone-500">{game.catatan}</span>}
                 </div>
               </div>
 
@@ -87,13 +87,13 @@ export function GamePickerCard({ games, onToggle, onHapus, rate, loadingKurs = f
                 <PriceIDR
                   usd={game.hargaUsd}
                   rate={loadingKurs ? null : rate}
-                  className="text-sm font-semibold text-gray-100"
+                  className="text-sm font-semibold text-stone-100"
                 />
                 {Number.isFinite(game.hargaAsliUsd) && game.hargaAsliUsd > game.hargaUsd && (
                   <PriceIDR
                     usd={game.hargaAsliUsd}
                     rate={rate}
-                    className="block text-xs text-gray-500 line-through"
+                    className="block text-xs text-stone-500 line-through"
                   />
                 )}
               </div>
@@ -102,7 +102,7 @@ export function GamePickerCard({ games, onToggle, onHapus, rate, loadingKurs = f
                 type="button"
                 onClick={() => onHapus(game.id)}
                 aria-label={`Hapus ${game.judul}`}
-                className="shrink-0 rounded-md p-1 text-gray-500 transition hover:bg-gray-800 hover:text-rose-400"
+                className="shrink-0 rounded-md p-1 text-stone-500 transition hover:bg-stone-800 hover:text-rose-400"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4" aria-hidden="true">
                   <path d="M4 7h16" />

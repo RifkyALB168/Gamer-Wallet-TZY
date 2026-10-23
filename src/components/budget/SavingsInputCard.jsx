@@ -2,7 +2,7 @@ import { useState } from "react";
 import { formatRupiah, formatRupiahCompact } from "../../utils/formatRupiah";
 
 const MIN_NOMINAL = 50_000;
-const MAX_NOMINAL = 2_000_000;
+const MAX_NOMINAL = 5_000_000;
 const STEP_NOMINAL = 10_000;
 const PRESET_NOMINAL = [50_000, 100_000, 200_000, 300_000];
 
@@ -35,7 +35,7 @@ export function SavingsInputCard({ nominal, onChange, onReset, onHitung }) {
   const persenSlider = ((Math.min(Math.max(nominal, MIN_NOMINAL), MAX_NOMINAL) - MIN_NOMINAL) / (MAX_NOMINAL - MIN_NOMINAL)) * 100;
 
   return (
-    <section className="rounded-2xl border border-grey-800 bg-grey-900/60 p-6">
+    <section className="rounded-2xl border border-stone-800 bg-stone-900/60 p-6">
       <header className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400">
@@ -45,19 +45,19 @@ export function SavingsInputCard({ nominal, onChange, onReset, onHitung }) {
             </svg>
           </span>
           <div>
-            <h2 className="text-lg font-semibold text-grey-100">Uang Jajan Bulanan</h2>
+            <h2 className="text-lg font-semibold text-stone-100">Uang Jajan Bulanan</h2>
           </div>
         </div>
-        <span className="rounded-md border border-grey-700 px-2 py-1 text-xs font-medium text-grey-400">IDR</span>
+        <span className="rounded-md border border-stone-700 px-2 py-1 text-xs font-medium text-stone-400">IDR</span>
       </header>
 
       <label
         htmlFor="nominal-tabungan"
-        className="mt-6 block text-xs font-semibold tracking-widest text-grey-400"
+        className="mt-6 block text-xs font-semibold tracking-widest text-stone-400"
       >
         NOMINAL TABUNGAN PER BULAN
       </label>
-      <div className="mt-2 flex items-center gap-2 rounded-xl border border-grey-700 bg-grey-950 px-4 py-3 focus-within:border-emerald-500">
+      <div className="mt-2 flex items-center gap-2 rounded-xl border border-stone-700 bg-stone-950 px-4 py-3 focus-within:border-emerald-500">
         <span className="text-lg font-semibold text-emerald-400">Rp</span>
         <input
           id="nominal-tabungan"
@@ -70,12 +70,12 @@ export function SavingsInputCard({ nominal, onChange, onReset, onHitung }) {
             onChange(angka);
           }}
           onBlur={() => setTeks(formatRupiah(nominal, { withPrefix: false }))}
-          className="w-full bg-transparent text-2xl font-bold tracking-wide text-grey-100 outline-none"
+          className="w-full bg-transparent text-2xl font-bold tracking-wide text-stone-100 outline-none"
         />
       </div>
 
       <div className="mt-6">
-        <div className="flex items-center justify-between text-xs text-grey-400">
+        <div className="flex items-center justify-between text-xs text-stone-400">
           <span>{formatRupiahCompact(MIN_NOMINAL)}</span>
           <span className="font-semibold text-emerald-400">{formatRupiah(nominal)}</span>
           <span>{formatRupiahCompact(MAX_NOMINAL)}</span>
@@ -89,11 +89,11 @@ export function SavingsInputCard({ nominal, onChange, onReset, onHitung }) {
           onChange={(event) => onChange(Number(event.target.value))}
           aria-label="Nominal tabungan per bulan"
           style={{ backgroundSize: `${persenSlider}% 100%` }}
-          className="mt-3 h-1.5 w-full cursor-pointer appearance-none rounded-full bg-grey-700 accent-emerald-500"
+          className="mt-3 h-1.5 w-full cursor-pointer appearance-none rounded-full bg-stone-700 accent-emerald-500"
         />
       </div>
 
-      <p className="mt-6 text-xs font-semibold tracking-widest text-grey-400">PRESET</p>
+      <p className="mt-6 text-xs font-semibold tracking-widest text-stone-400">PRESET</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {PRESET_NOMINAL.map((nilai) => {
           const aktif = nilai === nominal;
@@ -104,7 +104,7 @@ export function SavingsInputCard({ nominal, onChange, onReset, onHitung }) {
               onClick={() => onChange(nilai)}
               className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${aktif
                 ? "border-emerald-500 bg-emerald-500/15 text-emerald-300"
-                : "border-grey-700 text-grey-300 hover:border-grey-500"
+                : "border-stone-700 text-stone-300 hover:border-stone-500"
                 }`}
             >
               {formatRupiahCompact(nilai)}
@@ -116,14 +116,14 @@ export function SavingsInputCard({ nominal, onChange, onReset, onHitung }) {
       <button
         type="button"
         onClick={onHitung}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 font-semibold text-grey-950 transition hover:bg-emerald-400"
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 font-semibold text-stone-950 transition hover:bg-emerald-400"
       >
         Kalkulasikan
       </button>
 
       <div className="mt-4 flex items-center justify-between text-sm">
         <span />
-        <button type="button" onClick={onReset} className="text-grey-400 underline hover:text-grey-200">
+        <button type="button" onClick={onReset} className="text-stone-400 underline hover:text-stone-200">
           Reset
         </button>
       </div>

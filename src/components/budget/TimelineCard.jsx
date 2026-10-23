@@ -22,16 +22,10 @@ export function TimelineCard({ timeline, jumlahBulan, nominalBulanan, targetTerc
       : "Perlu Nabung Lebih";
 
   return (
-    <section className="rounded-2xl border border-gray-800 bg-gray-900/60 p-6">
+    <section className="rounded-2xl border border-stone-800 bg-stone-900/60 p-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5" aria-hidden="true">
-              <path d="M3 17l5-6 4 4 5-7" />
-              <path d="M3 21h18" />
-            </svg>
-          </span>
-          <h2 className="text-lg font-semibold text-gray-100">Timeline &amp; Progres Tabungan</h2>
+          <h2 className="text-lg font-semibold text-stone-100">Timeline &amp; Progres Tabungan</h2>
         </div>
         <span
           className={`rounded-full border px-3 py-1 text-xs font-semibold ${lunas || !adaTarget
@@ -43,7 +37,7 @@ export function TimelineCard({ timeline, jumlahBulan, nominalBulanan, targetTerc
         </span>
       </header>
 
-      <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-gray-800">
+      <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-stone-800">
         <div
           className="h-full rounded-full bg-emerald-500 transition-all"
           style={{ width: `${persenProgres}%` }}
@@ -55,7 +49,7 @@ export function TimelineCard({ timeline, jumlahBulan, nominalBulanan, targetTerc
       </div>
 
       <div className="mt-3 flex items-center justify-between text-sm">
-        <span className="text-gray-400">Awal ({formatRupiah(0)})</span>
+        <span className="text-stone-400">Awal ({formatRupiah(0)})</span>
         <span className="font-semibold text-emerald-400">
           {adaTarget && Number.isFinite(jumlahBulan)
             ? `Lunas di Bulan ke-${jumlahBulan}`
@@ -69,11 +63,11 @@ export function TimelineCard({ timeline, jumlahBulan, nominalBulanan, targetTerc
           return (
             <li
               key={item.bulan}
-              className={`rounded-xl border p-4 ${item.lunas ? "border-emerald-500/50 bg-emerald-500/10" : "border-gray-800 bg-gray-950/60"
+              className={`rounded-xl border p-4 ${item.lunas ? "border-emerald-500/50 bg-emerald-500/10" : "border-stone-800 bg-stone-950/60"
                 }`}
             >
               <div className="flex items-start justify-between">
-                <span className="text-xs font-semibold tracking-widest text-gray-400">
+                <span className="text-xs font-semibold tracking-widest text-stone-400">
                   BULAN {item.bulan}
                 </span>
                 {item.lunas && (
@@ -87,15 +81,15 @@ export function TimelineCard({ timeline, jumlahBulan, nominalBulanan, targetTerc
               {item.lunas ? (
                 <>
                   <p className="mt-2 text-sm font-semibold text-emerald-300">Lunas</p>
-                  <p className="text-lg font-bold text-gray-100">{formatRupiah(item.terkumpul)}</p>
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="text-lg font-bold text-stone-100">{formatRupiah(item.terkumpul)}</p>
+                  <p className="mt-1 text-xs text-stone-500">
                     Sisa {formatRupiah(sisaUangBulanIni)}
                   </p>
                 </>
               ) : (
                 <>
-                  <p className="mt-2 text-lg font-bold text-gray-100">{formatRupiah(item.terkumpul)}</p>
-                  <p className="mt-1 text-xs text-gray-500">Terkumpul {item.persen}%</p>
+                  <p className="mt-2 text-lg font-bold text-stone-100">{formatRupiah(item.terkumpul)}</p>
+                  <p className="mt-1 text-xs text-stone-500">Terkumpul {item.persen}%</p>
                 </>
               )}
             </li>
