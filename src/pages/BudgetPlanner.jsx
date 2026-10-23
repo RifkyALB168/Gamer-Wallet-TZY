@@ -1,5 +1,8 @@
+import { useCallback, useMemo, useRef, useState } from "react";
+import QuickSummaryCard from "../components/budget/QuickSummaryCard";
 import RateBadge from "../components/budget/RateBadge";
 import SavingsInputCard from "../components/budget/SavingsInputCard";
+import TimelineCard from "../components/budget/TimelineCard";
 import { mockGames } from "../data/mockGames";
 import { useBudget } from "../hooks/useBudget";
 import { useExchangeRate } from "../hooks/useExchangeRate";
@@ -87,6 +90,15 @@ export function BudgetPlanner({ games: gamesAwal }) {
             )}
           </div>
 
+          <div className="space-y-6" ref={timelineRef}>
+            <TimelineCard
+              timeline={timeline}
+              jumlahBulan={jumlahBulan}
+              nominalBulanan={nominalBulanan}
+              targetTercapai={targetTercapai}
+              totalWishlist={totalWishlist}
+            />
+          </div>
         </div>
     </main>
   );
