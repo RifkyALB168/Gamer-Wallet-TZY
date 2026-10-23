@@ -7,3 +7,50 @@ export function hitungBulanMenabung(totalTarget, tabunganPerBulan) {
 
   return Math.ceil(target / perBulan);
 }
+
+export function buatTimelineTabungan({
+  totalTarget,
+  tabunganPerBulan,
+  maksBulan = 12,
+} = {}) {
+  const target = Number(totalTarget) || 0;
+  const perBulan = Number(tabunganPerBulan) || 0;
+
+  if (target <= 0 || perBulan <= 0) {
+    return [
+      {
+        bulan: 1,
+        terkumpul: 0,
+        persen: 0,
+        lunas: false,
+        sisa: target,
+        nominalBulanIni: perBulan,
+      },
+    ];
+  }
+
+  const totalBulan = Math.min(
+    Math.ceil(target / perBulan),
+    Math.max(1, maksBulan),
+  );
+  const timeline = [];
+  let terkumpul = 0;
+
+  for (let bulan = 1; bulan <= totalBulan; bulan += 1) {
+    const sisaSebelumnya = Math.max(target - terkumpul, 0);
+    const nominalBulanIni = Math.min(perBulan, sisaSebelumnya);
+    terkumpul += nominalBulanIni;
+    const lunas = terkumpul >= target;
+
+    timeline.push({
+      bulan,
+      terkumpul,
+      persen: target > 0 ? Math.round((terkumpul / target) * 100) : 0,
+      lunas,
+      sisa: Math.max(target - terkumpul, 0),
+      nominalBulanIni,
+    });
+  }
+
+  return timeline;
+}
