@@ -1,5 +1,12 @@
+import { mockGames } from "../data/mockGames";
 
 export function BudgetPlanner({ games: gamesAwal }) {
+  const [games, setGames] = useState(() =>
+    (gamesAwal ?? mockGames).map((game) => ({ ...game })),
+  );
+  const [pesanHitung, setPesanHitung] = useState("");
+  const timelineRef = useRef(null);
+
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-6xl">
