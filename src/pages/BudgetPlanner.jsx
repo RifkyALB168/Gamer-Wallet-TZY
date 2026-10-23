@@ -1,4 +1,6 @@
 import { mockGames } from "../data/mockGames";
+import { useExchangeRate } from "../hooks/useExchangeRate";
+import { totalHargaGameTerpilih } from "../utils/tabungan";
 
 export function BudgetPlanner({ games: gamesAwal }) {
   const [games, setGames] = useState(() =>
@@ -6,6 +8,13 @@ export function BudgetPlanner({ games: gamesAwal }) {
   );
   const [pesanHitung, setPesanHitung] = useState("");
   const timelineRef = useRef(null);
+
+
+  const { rate, date, loading, error, source, refresh } = useExchangeRate();
+  const totalWishlist = useMemo(
+    () => totalHargaGameTerpilih(games, rate ?? 0),
+    [games, rate],
+  );
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100 sm:px-6 lg:px-10">
