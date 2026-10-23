@@ -56,9 +56,17 @@ export function BudgetPlanner({ games: gamesAwal }) {
           </div>
         </header>
 
+        <RateBadge
+          rate={rate}
+          date={date}
+          loading={loading}
+          error={error}
+          source={source}
+          onRefresh={refresh}
+        />
 
       </div>
-    </main >
+    </main>
   );
 }
 
