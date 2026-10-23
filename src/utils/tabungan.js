@@ -54,3 +54,34 @@ export function buatTimelineTabungan({
 
   return timeline;
 }
+
+export function hitungRingkasanBudget({ totalTarget, tabunganPerBulan } = {}) {
+  const target = Number(totalTarget) || 0;
+  const perBulan = Number(tabunganPerBulan) || 0;
+  const jumlahBulan = hitungBulanMenabung(target, perBulan);
+  const totalTerkumpul = jumlahBulan === Infinity ? perBulan : target;
+
+  // Sisa uang pada bulan terakhir: selisih dari nominal penuh dikurangi kebutuhan.
+  const sisaTabungan =
+    jumlahBulan === Infinity ? 0 : Math.max(jumlahBulan * perBulan - target, 0);
+
+  return { totalWishlist: target, jumlahBulan, totalTerkumpul, sisaTabungan };
+}
+
+export function totalHargaGameTerpilih(games = [], rate = 0) {
+  return games.reduce((total, game) => {
+    if (!game || !game.dipilih) return total;
+    if (Number.isFinite(game.hargaIdr)) return total + Number(game.hargaIdr);
+    if (Number.isFinite(game.hargaUsd)) {
+      return total + Math.round(Number(game.hargaUsd) * (Number(rate) || 0));
+    }
+    return total;
+  }, 0);
+}
+
+export function hitungBatasAman(uangSakuBulanan, persen = 25) {
+  const saku = Number(uangSakuBulanan) || 0;
+  const porsi = Number(persen);
+  if (!Number.isFinite(porsi) || porsi <= 0) return 0;
+  return Math.round((saku * porsi) / 100);
+}
