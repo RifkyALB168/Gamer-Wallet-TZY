@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   buatTimelineTabungan,
   hitungBulanMenabung,
@@ -26,8 +26,8 @@ function bacaSimpanan() {
 
 /**
  * State budget bulanan untuk halaman Budget Planner.
- * Menyimpan nominal tabungan dan uang saku di localStorage, lalu
- * menghitung timeline dan ringkasan dari total harga game.
+ * Menyimpan nominal tabungan di localStorage, lalu menghitung
+ * timeline dan ringkasan dari total harga game.
  *
  * @param {object} [options]
  * @param {number} [options.totalWishlist] total harga game yang dipilih
@@ -35,9 +35,7 @@ function bacaSimpanan() {
  * @param {number} [options.maksBulan] batas kartu timeline, default 12
  * @returns {{
  *   nominalBulanan: number,
- *   uangSaku: number,
  *   setNominalBulanan: (value: number) => void,
- *   setUangSaku: (value: number) => void,
  *   reset: () => void,
  *   jumlahBulan: number,
  *   timeline: Array<object>,
@@ -53,35 +51,20 @@ export function useBudget({
   const [nominalBulanan, setNominalState] = useState(
     () => keRupiah(bacaSimpanan().nominalBulanan) || nominalAwal,
   );
-  const [uangSaku, setUangSakuState] = useState(() =>
-    keRupiah(bacaSimpanan().uangSaku),
-  );
 
   useEffect(() => {
     try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ nominalBulanan, uangSaku }),
-      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ nominalBulanan }));
     } catch {
       /* penyimpanan tidak tersedia: state tetap jalan selama sesi */
     }
-  }, [nominalBulanan, uangSaku]);
+  }, [nominalBulanan]);
 
-  const setNominalBulanan = useCallback(
-    (nilai) => setNominalState(keRupiah(nilai)),
-    [],
-  );
-  const setUangSaku = useCallback(
-    (nilai) => setUangSakuState(keRupiah(nilai)),
-    [],
-  );
+  const setNominalBulanan = (nilai) => setNominalState(keRupiah(nilai));
 
-  const reset = useCallback(() => {
-    setNominalState(nominalAwal);
-    setUangSakuState(0);
-  }, [nominalAwal]);
+  const reset = () => setNominalState(nominalAwal);
 
+  // Hitungan murni dan murah (paling banyak 12 kartu), jadi tidak perlu useMemo.
   const jumlahBulan = hitungBulanMenabung(totalWishlist, nominalBulanan);
   const timeline = buatTimelineTabungan({
     totalTarget: totalWishlist,
@@ -95,9 +78,7 @@ export function useBudget({
 
   return {
     nominalBulanan,
-    uangSaku,
     setNominalBulanan,
-    setUangSaku,
     reset,
     jumlahBulan,
     timeline,

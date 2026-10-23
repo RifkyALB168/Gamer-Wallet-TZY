@@ -78,10 +78,3 @@ export function totalHargaGameTerpilih(games = [], rate = 0) {
     return total;
   }, 0);
 }
-
-export function hitungBatasAman(uangSakuBulanan, persen = 25) {
-  const saku = Number(uangSakuBulanan) || 0;
-  const porsi = Number(persen);
-  if (!Number.isFinite(porsi) || porsi <= 0) return 0;
-  return Math.round((saku * porsi) / 100);
-}
