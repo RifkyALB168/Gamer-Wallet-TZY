@@ -1,4 +1,5 @@
 import { mockGames } from "../data/mockGames";
+import { useBudget } from "../hooks/useBudget";
 import { useExchangeRate } from "../hooks/useExchangeRate";
 import { totalHargaGameTerpilih } from "../utils/tabungan";
 
@@ -29,7 +30,7 @@ export function BudgetPlanner({ games: gamesAwal }) {
 
 
       </div>
-    </main>
+    </main >
   );
 }
 
