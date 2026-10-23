@@ -1,3 +1,4 @@
+import RateBadge from "../components/budget/RateBadge";
 import { mockGames } from "../data/mockGames";
 import { useBudget } from "../hooks/useBudget";
 import { useExchangeRate } from "../hooks/useExchangeRate";
