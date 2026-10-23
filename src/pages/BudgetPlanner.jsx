@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import GamePickerCard from "../components/budget/GamePickerCard";
-import QuickSummaryCard from "../components/budget/QuickSummaryCard";
 import RateBadge from "../components/budget/RateBadge";
 import SavingsInputCard from "../components/budget/SavingsInputCard";
 import TimelineCard from "../components/budget/TimelineCard";
@@ -53,11 +52,11 @@ export function BudgetPlanner({ games: gamesAwal }) {
   }, [totalWishlist]);
 
   return (
-    <main className="min-h-screen bg-stone-950 px-4 py-10 text-gray-100 sm:px-6 lg:px-10">
+    <main className="min-h-screen bg-stone-950 px-4 py-8 text-gray-100 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-6xl">
         <header className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
               Kalkulator Nabung
             </h1>
           </div>
@@ -72,16 +71,15 @@ export function BudgetPlanner({ games: gamesAwal }) {
           onRefresh={refresh}
         />
 
-
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div className="space-y-6">
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="space-y-4">
             <SavingsInputCard
               nominal={nominalBulanan}
               onChange={setNominalBulanan}
               onReset={reset}
               onHitung={hitungEstimasi}
+              ringkasan={ringkasan}
             />
-            <QuickSummaryCard ringkasan={ringkasan} />
             {pesanHitung && (
               <p
                 role="status"
@@ -92,7 +90,7 @@ export function BudgetPlanner({ games: gamesAwal }) {
             )}
           </div>
 
-          <div className="space-y-6" ref={timelineRef}>
+          <div className="space-y-4" ref={timelineRef}>
             <TimelineCard
               timeline={timeline}
               jumlahBulan={jumlahBulan}
