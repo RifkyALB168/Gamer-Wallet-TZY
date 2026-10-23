@@ -79,6 +79,28 @@ export function buildUrl(endpoint, { from, to, amount = 1 }) {
 }
 
 /**
+ * Ubah respons mentah Frankfurter menjadi bentuk yang dipakai aplikasi.
+ * @param {any} payload
+ * @param {string} targetCurrency
+ * @returns {{ base: string, target: string, date: string, rate: number } | null}
+ */
+export function normalizeRate(payload, targetCurrency) {
+  if (!payload || typeof payload !== "object") return null;
+  const rates = payload.rates;
+  if (!rates || typeof rates !== "object") return null;
+
+  const rate = rates[targetCurrency];
+  if (typeof rate !== "number" || !Number.isFinite(rate) || rate <= 0)
+    return null;
+
+  return {
+    base: payload.base ?? null,
+    target: targetCurrency,
+    date: payload.date ?? null,
+    rate,
+  };
+}
+
 /**
  * Panggil satu endpoint Frankfurter dengan timeout dan fallback host.
  * @param {string} endpoint
