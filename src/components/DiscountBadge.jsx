@@ -1,9 +1,7 @@
 /**
- * Lencana persen diskon, mis. "-25% OFF". Tidak tampil bila tidak ada diskon.
- *
  * @param {object} props
- * @param {number} props.persen besar diskon dalam persen
- * @param {string} [props.className] kelas tambahan, mis. untuk posisi
+ * @param {number} props.persen
+ * @param {string} [props.className]
  */
 export function DiscountBadge({ persen, className = "" }) {
   const nilai = Math.round(Number(persen));

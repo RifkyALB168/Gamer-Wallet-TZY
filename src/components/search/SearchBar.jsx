@@ -1,6 +1,4 @@
 /**
- * Kolom pencarian judul game. Tombol Esc menghapus isi kolom.
- *
  * @param {object} props
  * @param {string} props.value
  * @param {(value: string) => void} props.onChange

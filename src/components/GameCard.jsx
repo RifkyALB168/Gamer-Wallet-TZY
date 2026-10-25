@@ -2,14 +2,10 @@ import DiscountBadge from "./DiscountBadge";
 import PriceIDR from "./PriceIDR";
 
 /**
- * Kartu game: gambar, judul, harga rupiah (perkiraan), toko termurah, dan aksi.
- * Tidak tahu soal router atau wishlist; semua aksi dikirim lewat props supaya
- * bisa dipakai di Home, Cari Game, dan Wishlist.
- *
  * @param {object} props
  * @param {{ id: string, judul: string, cover: string, hargaUsd: number, hargaAsliUsd: number, diskonPersen: number, ratingPersen?: number|null }} props.game
- * @param {number|null} props.rate kurs 1 USD dalam rupiah
- * @param {string} [props.namaToko] nama toko termurah
+ * @param {number|null} props.rate
+ * @param {string} [props.namaToko]
  * @param {boolean} [props.inWishlist]
  * @param {(game: object) => void} [props.onDetail]
  * @param {(game: object) => void} [props.onToggleWishlist]

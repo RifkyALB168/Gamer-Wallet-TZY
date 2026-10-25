@@ -1,4 +1,4 @@
-/** Rentang harga dalam rupiah. `min` dan `max` null artinya tanpa batas. */
+/** Rentang harga dalam rupiah. `min` dan `max` null artinya tanpa batas */
 export const RENTANG_HARGA = [
   { id: "semua", label: "Semua Harga", min: null, max: null },
   { id: "murah", label: "< Rp100rb", min: null, max: 100_000 },
@@ -7,7 +7,7 @@ export const RENTANG_HARGA = [
   { id: "premium", label: "> Rp600rb", min: 600_000, max: null },
 ];
 
-/** Opsi urutan hasil. `sortBy` dipakai CheapShark di bagian 2. */
+/** Opsi urutan hasil. `sortBy` */
 export const OPSI_URUTAN = [
   { id: "editor", label: "Pilihan Editor", sortBy: "Deal Rating", desc: false },
   { id: "diskon", label: "Diskon Terbesar", sortBy: "Savings", desc: true },

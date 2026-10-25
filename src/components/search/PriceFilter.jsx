@@ -1,10 +1,8 @@
 import { RENTANG_HARGA } from "../../utils/searchFilters";
 
 /**
- * Filter rentang harga berupa deretan tombol pilihan tunggal.
- *
  * @param {object} props
- * @param {string} props.value id rentang yang aktif
+ * @param {string} props.value
  * @param {(id: string) => void} props.onChange
  */
 export function PriceFilter({ value, onChange }) {

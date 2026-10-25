@@ -1,4 +1,4 @@
-// Data contoh khusus tampilan Cari Game. Diganti data CheapShark di bagian 2.
+// Data contoh khusus tampilan Cari Game
 export const KURS_CONTOH = 16250;
 
 export const tokoContoh = [
