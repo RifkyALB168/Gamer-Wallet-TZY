@@ -1,9 +1,7 @@
 /**
- * Filter toko dengan pilihan ganda. Tanpa pilihan berarti semua toko.
- *
  * @param {object} props
- * @param {{id: string, nama: string}[]} props.stores toko yang bisa dipilih
- * @param {string[]} props.selected ID toko yang dipilih
+ * @param {{id: string, nama: string}[]} props.stores 
+ * @param {string[]} props.selected 
  * @param {(ids: string[]) => void} props.onChange
  */
 export function StoreFilter({ stores, selected, onChange }) {

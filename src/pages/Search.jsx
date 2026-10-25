@@ -6,7 +6,6 @@ import StoreFilter from "../components/search/StoreFilter";
 import { gameContoh, KURS_CONTOH, tokoContoh } from "../data/mockSearchGames";
 import { OPSI_URUTAN } from "../utils/searchFilters";
 
-// Bagian 1: tampilan saja. Data contoh dan belum memanggil API.
 export function Search() {
   const [kataKunci, setKataKunci] = useState("");
   const [rentangId, setRentangId] = useState("semua");
