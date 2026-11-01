@@ -7,7 +7,6 @@ export const RENTANG_HARGA = [
   { id: "premium", label: "> Rp600rb", min: 600_000, max: null },
 ];
 
-/** Opsi urutan hasil. `sortBy` */
 export const OPSI_URUTAN = [
   { id: "editor", label: "Pilihan Editor", sortBy: "Deal Rating", desc: false },
   { id: "diskon", label: "Diskon Terbesar", sortBy: "Savings", desc: true },
@@ -15,3 +14,27 @@ export const OPSI_URUTAN = [
   { id: "review", label: "Review Terbaik", sortBy: "Reviews", desc: true },
   { id: "judul", label: "Judul A-Z", sortBy: "Title", desc: false },
 ];
+
+// Toko yang ditampilkan sebagai filter
+const TOKO_UTAMA = [
+  "Steam",
+  "Epic Games Store",
+  "GOG",
+  "Fanatical",
+  "GreenManGaming",
+  "Humble Store",
+];
+
+// Ambil hanya toko utama dari daftar toko API, urutannya mengikuti TOKO_UTAMA
+export function pilihTokoUtama(stores) {
+  return TOKO_UTAMA.map((nama) =>
+    stores.find((toko) => toko.nama.toLowerCase() === nama.toLowerCase()),
+  ).filter(Boolean);
+}
+
+// Ubah batas harga rupiah ke dolar untuk dikirim ke CheapShark.
+// Dibulatkan ke dolar penuh supaya perubahan kurs kecil tidak memicu fetch ulang.
+export function keUsd(rupiah, rate) {
+  if (rupiah === null || !rate) return undefined;
+  return Math.round(rupiah / rate);
+}
