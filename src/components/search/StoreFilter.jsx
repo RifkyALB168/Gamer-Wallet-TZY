@@ -27,18 +27,22 @@ export function StoreFilter({ stores, selected, onChange }) {
         </button>
       </div>
       <div className="flex flex-wrap gap-2">
+        {stores.length === 0 && (
+          <span className="text-xs text-stone-500">Memuat daftar toko...</span>
+        )}
         {stores.map((toko) => (
           <button
             key={toko.id}
             type="button"
             aria-pressed={selected.includes(toko.id)}
             onClick={() => toggle(toko.id)}
-            className={`rounded-md px-3 py-1.5 text-xs font-medium transition focus-visible:outline-2 focus-visible:outline-emerald-400 ${
+            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition focus-visible:outline-2 focus-visible:outline-emerald-400 ${
               selected.includes(toko.id)
                 ? "bg-indigo-500 text-white"
                 : "bg-indigo-500/20 text-indigo-200 hover:bg-indigo-500/30"
             }`}
           >
+            {toko.ikon && <img src={toko.ikon} alt="" className="h-4 w-4" />}
             {toko.nama}
           </button>
         ))}
