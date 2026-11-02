@@ -128,12 +128,14 @@ export default function About() {
   };
 
   return (
-    <main id="main-content" className="bg-[#0d1015] text-[#e8edf3] max-w-[1200px] mx-auto px-6 py-8 pb-16 font-sans w-full box-border">
-      {/* Top Meta System Tag */}
-      <div className="flex justify-between items-center font-mono text-xs text-[#34e0a1] mb-4">
-        <span>● SYSTEM // REPOSITORY OVERVIEW &amp; FEEDBACK CHANNEL</span>
-        <span className="text-[#6b7c93]">IF-PB-2026-TZY</span>
-      </div>
+    
+    <div className="bg-[#0d1015] min-h-screen w-full">
+      <main id="main-content" className="text-[#e8edf3] max-w-[1200px] mx-auto px-6 py-8 pb-16 font-sans w-full box-border">
+        {/* Top Meta System Tag */}
+        <div className="flex justify-between items-center font-mono text-xs text-[#34e0a1] mb-4">
+          <span>● SYSTEM // REPOSITORY OVERVIEW &amp; FEEDBACK CHANNEL</span>
+          <span className="text-[#6b7c93]">IF-PB-2026-TZY</span>
+        </div>
 
       {/* Header */}
       <header className="mb-10">
@@ -373,5 +375,6 @@ export default function About() {
 
       </div>
     </main>
+    </div>
   );
 }
