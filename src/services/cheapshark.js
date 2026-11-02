@@ -101,7 +101,13 @@ export async function fetchGameDetail(id, signal) {
     id,
     judul: data.info.title,
     cover: ambilCover(data.info),
-    hargaTermurahSepanjangMasaUsd: Number(data.cheapestPriceEver?.price),
+    hargaTerendah: data.cheapestPriceEver
+      ? {
+          hargaUsd: Number(data.cheapestPriceEver.price),
+          tanggal: data.cheapestPriceEver.date,
+          storeId: data.cheapestPriceEver.storeID,
+        }
+      : null,
     penawaran: data.deals
       .map((deal) => ({
         dealId: deal.dealID,

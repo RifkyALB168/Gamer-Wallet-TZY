@@ -1,5 +1,5 @@
 import { formatRupiah } from "../../utils/formatRupiah";
-import { formatTanggal, sisaHari } from "../../utils/formatTanggal";
+import { formatTanggal } from "../../utils/formatTanggal";
 import DiscountBadge from "../DiscountBadge";
 import PriceIDR from "../PriceIDR";
 
@@ -15,20 +15,21 @@ import PriceIDR from "../PriceIDR";
  * @param {() => void} props.onToggleWishlist
  */
 export function GameHero({ game, dealTermurah, rate, tanggalKurs, inWishlist, onToggleWishlist }) {
-  const hari = sisaHari(game.diskonBerakhir);
-  const judulLengkap = `${game.judul}: ${game.edisi}`;
+  const judulLengkap = game.edisi ? `${game.judul}: ${game.edisi}` : game.judul;
 
   const statistik = [
     {
       label: "Status Diskon",
-      nilai: hari > 0 ? `Aktif hingga ${hari} hari` : "Harga normal",
-      warna: hari > 0 ? "text-emerald-300" : "text-stone-300",
+      nilai: dealTermurah.diskonPersen > 0 ? "Diskon aktif" : "Harga normal",
+      warna: dealTermurah.diskonPersen > 0 ? "text-emerald-300" : "text-stone-300",
     },
     {
       label: "All-Time Low (ATL)",
-      nilai: <PriceIDR usd={game.hargaTerendah.hargaUsd} rate={rate} />,
+      nilai: game.hargaTerendah?.hargaUsd != null
+        ? <PriceIDR usd={game.hargaTerendah.hargaUsd} rate={rate} />
+        : "Belum tersedia",
     },
-    { label: "Steam Rating", nilai: `${game.ratingSteamPersen}% Positif` },
+    { label: "Steam Rating", nilai: game.ratingSteamPersen ? `${game.ratingSteamPersen}% Positif` : "Belum tersedia" },
     {
       label: "Konversi Kurs ECB",
       nilai: rate ? `$1 = ${formatRupiah(rate)}` : "Memuat kurs...",
@@ -48,7 +49,7 @@ export function GameHero({ game, dealTermurah, rate, tanggalKurs, inWishlist, on
             }
           }}
         />
-        {dealTermurah.hargaUsd <= game.hargaTerendah.hargaUsd * 1.15 && (
+        {game.hargaTerendah?.hargaUsd != null && dealTermurah.hargaUsd <= game.hargaTerendah.hargaUsd * 1.15 && (
           <span className="absolute left-2 top-2 rounded-md bg-emerald-400 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-stone-950">
             ★ Best Historic Price
           </span>
@@ -60,7 +61,7 @@ export function GameHero({ game, dealTermurah, rate, tanggalKurs, inWishlist, on
 
       <div className="min-w-0">
         <ul className="flex flex-wrap gap-2" aria-label="Genre">
-          {game.genre.map((genre) => (
+          {(game.genre ?? []).map((genre) => (
             <li
               key={genre}
               className="rounded border border-stone-700 px-2 py-0.5 font-mono text-[11px] uppercase text-stone-300"
@@ -68,27 +69,25 @@ export function GameHero({ game, dealTermurah, rate, tanggalKurs, inWishlist, on
               {genre}
             </li>
           ))}
-          <li className="rounded bg-amber-400/10 px-2 py-0.5 font-mono text-[11px] text-amber-300">
-            Metacritic {game.metacritic}
-          </li>
+          {game.metacritic != null && <li className="rounded bg-amber-400/10 px-2 py-0.5 font-mono text-[11px] text-amber-300">Metacritic {game.metacritic}</li>}
         </ul>
 
         <h1 id="judul-game" className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-          {game.judul}: <span className="text-emerald-400">{game.edisi}</span>
+          {game.edisi ? <>{game.judul}: <span className="text-emerald-400">{game.edisi}</span></> : <span className="text-emerald-400">{game.judul}</span>}
         </h1>
         <dl className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-stone-400">
-          <div className="flex gap-1">
+          {game.developer && <div className="flex gap-1">
             <dt>Developer:</dt>
             <dd className="font-semibold text-stone-200">{game.developer}</dd>
-          </div>
-          <div className="flex gap-1">
+          </div>}
+          {game.publisher && <div className="flex gap-1">
             <dt>Penerbit:</dt>
             <dd className="font-semibold text-stone-200">{game.publisher}</dd>
-          </div>
-          <div className="flex gap-1">
+          </div>}
+          {game.tanggalRilis && <div className="flex gap-1">
             <dt>Rilis:</dt>
             <dd className="font-semibold text-stone-200">{formatTanggal(game.tanggalRilis)}</dd>
-          </div>
+          </div>}
         </dl>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-stone-800 bg-stone-900/70 p-4">
