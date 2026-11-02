@@ -46,11 +46,13 @@ function saranBeli(hargaSekarang, hargaTerendah) {
  * @param {number|null} props.rate kurs 1 USD dalam rupiah
  */
 export function PriceHistoryCard({ riwayat, hargaTerendah, hargaSekarangUsd, rate }) {
-  const titik = buatTitik(riwayat);
+  const adaRiwayat = riwayat.length > 0;
+  const titik = adaRiwayat ? buatTitik(riwayat) : [];
   const garis = titik.map((t) => `${t.x},${t.y}`).join(" ");
   const area = `0,${TINGGI} ${garis} ${LEBAR},${TINGGI}`;
-  const saran = saranBeli(hargaSekarangUsd, hargaTerendah.hargaUsd);
-  const selisih = usdKeRupiah(hargaSekarangUsd - hargaTerendah.hargaUsd, rate);
+  const adaHargaTerendah = Number.isFinite(hargaTerendah?.hargaUsd);
+  const saran = adaHargaTerendah ? saranBeli(hargaSekarangUsd, hargaTerendah.hargaUsd) : null;
+  const selisih = adaHargaTerendah ? usdKeRupiah(hargaSekarangUsd - hargaTerendah.hargaUsd, rate) : 0;
   const tengah = Math.floor((riwayat.length - 1) / 2);
 
   return (
@@ -66,17 +68,11 @@ export function PriceHistoryCard({ riwayat, hargaTerendah, hargaSekarangUsd, rat
         <p className="font-mono text-[11px] uppercase text-stone-500">
           Harga terendah sepanjang masa (ATL)
         </p>
-        <p className="mt-1 flex flex-wrap items-baseline gap-2">
-          <PriceIDR
-            usd={hargaTerendah.hargaUsd}
-            rate={rate}
-            className="font-mono text-2xl font-bold text-gray-100"
-          />
-          <span className="text-xs text-stone-500">
-            di {hargaTerendah.toko} ({formatTanggal(hargaTerendah.tanggal, { month: "long", year: "numeric" })})
-          </span>
-        </p>
-        {selisih > 0 && (
+        {adaHargaTerendah ? <p className="mt-1 flex flex-wrap items-baseline gap-2">
+          <PriceIDR usd={hargaTerendah.hargaUsd} rate={rate} className="font-mono text-2xl font-bold text-gray-100" />
+          <span className="text-xs text-stone-500">{hargaTerendah.toko}{hargaTerendah.tanggal ? ` (${formatTanggal(hargaTerendah.tanggal, { month: "long", year: "numeric" })})` : ""}</span>
+        </p> : <p className="mt-1 text-sm text-stone-400">Data harga terendah historis belum tersedia.</p>}
+        {adaHargaTerendah && selisih > 0 && (
           <p className="mt-1 text-xs text-stone-400">
             Harga sekarang selisih{" "}
             <span className="font-semibold text-amber-300">+{formatRupiah(selisih)}</span> dari
@@ -85,7 +81,7 @@ export function PriceHistoryCard({ riwayat, hargaTerendah, hargaSekarangUsd, rat
         )}
       </div>
 
-      <figure className="mt-4">
+      {adaRiwayat ? <figure className="mt-4">
         <figcaption className="flex justify-between text-[11px] text-stone-500">
           <span>Tren {riwayat.length} bulan terakhir</span>
           <span className="text-emerald-300">Harga termurah per bulan</span>
@@ -118,12 +114,12 @@ export function PriceHistoryCard({ riwayat, hargaTerendah, hargaSekarangUsd, rat
           <span>{riwayat[tengah]?.bulan}</span>
           <span>Hari ini</span>
         </div>
-      </figure>
+      </figure> : <p className="mt-4 rounded-xl border border-stone-800 bg-stone-950/50 p-3 text-xs leading-5 text-stone-400">Riwayat harga bulanan tidak disediakan oleh CheapShark. Informasi harga terendah sepanjang masa ditampilkan di atas.</p>}
 
-      <div className={`mt-4 rounded-xl border p-3 ${saran.gaya}`}>
+      {saran && <div className={`mt-4 rounded-xl border p-3 ${saran.gaya}`}>
         <p className="text-sm font-semibold">✓ {saran.judul}</p>
         <p className="mt-1 text-xs opacity-80">{saran.teks}</p>
-      </div>
+      </div>}
     </section>
   );
 }

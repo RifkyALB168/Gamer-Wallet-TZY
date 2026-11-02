@@ -1,9 +1,9 @@
+import { Link } from "react-router-dom";
 import GameAbout from "../components/detail/GameAbout";
 import GameHero from "../components/detail/GameHero";
 import MiniBudgetCard from "../components/detail/MiniBudgetCard";
 import PriceHistoryCard from "../components/detail/PriceHistoryCard";
 import StorePriceTable from "../components/detail/StorePriceTable";
-import { ID_GAME_CONTOH } from "../data/mockGameDetail";
 import { useExchangeRate } from "../hooks/useExchangeRate";
 import { useGameDetail } from "../hooks/useGameDetail";
 import { useWishlist } from "../hooks/useWishlist";
@@ -56,14 +56,14 @@ function GagalMuat({ pesan, onCobaLagi }) {
  * @param {object} props
  * @param {string} [props.gameId] ID game, nanti diisi dari parameter URL router
  */
-export function GameDetail({ gameId = ID_GAME_CONTOH }) {
+export function GameDetail({ gameId }) {
   const { game, loading, error, cobaLagi } = useGameDetail(gameId);
   const { rate, date } = useExchangeRate();
   const { ada, toggle } = useWishlist();
 
   const deals = game ? urutkanDeal(game.deals) : [];
   const dealTermurah = deals[0];
-  const judulLengkap = game ? `${game.judul}: ${game.edisi}` : "";
+  const judulLengkap = game ? (game.edisi ? `${game.judul}: ${game.edisi}` : game.judul) : "";
 
   let isi;
   if (loading) {
@@ -92,7 +92,7 @@ export function GameDetail({ gameId = ID_GAME_CONTOH }) {
         <div className="mt-8 grid items-start gap-6 lg:grid-cols-[1fr_340px]">
           <div className="space-y-6">
             <StorePriceTable deals={deals} rate={rate} judulGame={judulLengkap} />
-            <GameAbout judul={judulLengkap} deskripsi={game.deskripsi} sorotan={game.sorotan} />
+            {(game.deskripsi || game.sorotan?.length > 0) && <GameAbout judul={judulLengkap} deskripsi={game.deskripsi} sorotan={game.sorotan} />}
           </div>
 
           <aside className="space-y-6" aria-label="Analisis harga dan budget">
@@ -122,9 +122,9 @@ export function GameDetail({ gameId = ID_GAME_CONTOH }) {
         <nav aria-label="Breadcrumb" className="mb-5 text-xs text-stone-500">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li>
-              <a href="/search" className="hover:text-stone-200">
+              <Link to="/search" className="hover:text-stone-200">
                 ← Katalog Game
-              </a>
+              </Link>
             </li>
             {game && (
               <>
