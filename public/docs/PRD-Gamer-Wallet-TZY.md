@@ -1,192 +1,87 @@
-# PRD Gamer Wallet TZY
+# PRD Gamer Wallet TZY — Tugas Besar II
 
-Terakhir diperbarui: 22 Oktober 2026
+Diperbarui 21 November 2026. Audit memakai `origin/main` commit `56ab1ba` setelah fetch dari GitHub.
 
-## Ringkasan
+## Keputusan tim
 
-Gamer Wallet TZY adalah aplikasi web yang membantu gamer Indonesia memutuskan kapan dan di mana membeli game PC dengan harga terbaik, dengan harga dalam rupiah dan perencanaan budget bulanan. Pengguna mencari game, membandingkan harga antar toko, menyimpan game ke wishlist, lalu melihat berapa bulan uang jajan game dibutuhkan untuk membelinya. Halaman terpisah menampilkan game gratis yang sedang dibagikan, supaya pengguna tidak membeli game yang sebentar lagi gratis.
+- Keenam anggota sudah menyetujui pembagian tugas di PRD ini.
+- Tenggat pengumpulan akhir adalah **20 Desember 2026**.
+- Styling frontend menggunakan **Tailwind CSS**, meneruskan stack frontend UTS.
+- **Deployment production wajib selesai sebelum pengumpulan.** Frontend di Vercel, backend di Render, dan database di Neon PostgreSQL. Sertakan link frontend, API, dan Swagger serta bukti alur utama berjalan di production.
 
-Aplikasi dibuat dengan React oleh tim 6 orang untuk tugas besar Perancangan dan Pemrograman Web. Tidak ada backend: data harga dan giveaway datang dari tiga API publik, dan data pengguna disimpan di localStorage.
+## Tujuan dan ruang lingkup
 
-## Latar belakang dan masalah
+Gamer Wallet TZY membantu gamer PC Indonesia membandingkan harga dalam rupiah, menyimpan game yang diincar, merencanakan tabungan, dan menemukan giveaway aktif. Versi akhir mempertahankan frontend UTS (React, Vite, Tailwind, React Router) dan menambahkan backend REST, akun, penyimpanan PostgreSQL, serta bantuan LLM pada fitur yang relevan. Pengunjung tetap dapat membuka katalog, Detail Game, dan Game Gratis tanpa login. Login diperlukan untuk menyimpan data pribadi dan memakai bantuan LLM.
 
-Gamer dengan uang jajan terbatas sulit memutuskan kapan sebuah game layak dibeli. Ada empat masalah yang ingin diselesaikan:
+Versi akhir mencakup Home, Cari Game, Detail Game, Game Gratis, Wishlist, Budget Planner, Kontak/Tentang, dan 404, serta Register, Login, dan pengaturan profil. Pembelian tetap terjadi di toko melalui tautan resmi dari penyedia data. Pembayaran, notifikasi harga, dan integrasi akun toko berada di luar lingkup.
 
-- Harga dari sumber data seperti CheapShark berbentuk USD, sehingga pengguna harus menghitung sendiri ke rupiah.
-- Harga dan diskon berbeda antar toko dan berubah cepat, jadi toko termurah hari ini sulit diketahui.
-- Game yang dibagikan gratis sementara mudah terlewat, dan ada pengguna yang membeli game yang tak lama kemudian gratis.
-- Tidak ada patokan kapan wishlist bisa terbeli dari uang jajan bulanan.
+## Audit terhadap spesifikasi pengumpulan
 
-## Tujuan dan indikator keberhasilan
+Spesifikasi membagi nilai menjadi **20% kelompok** (Git, laporan, integrasi) dan **80% individu** (Git, backend, frontend, testing, keamanan, optimasi, deployment, dan integrasi LLM). Checklist individu mencantumkan REST, CRUD lewat Prisma, validasi DTO dan sanitasi, error handling, testing, serta implementasi fitur LLM. Checklist kelompok mencantumkan autentikasi dan otorisasi JWT, Swagger/OpenAPI, CORS dan variabel lingkungan, optimasi, deployment production, serta integrasi LLM.
 
-Proyek berhasil jika pengguna bisa menemukan harga terbaik, merencanakan pembelian, dan tidak melewatkan game gratis, dan jika tim memenuhi rubrik tugas besar.
+| Aspek | Kondisi di repo saat audit | Yang diperlukan untuk pengumpulan |
+| --- | --- | --- |
+| Git kelompok dan individu | Riwayat commit dan pull request tersedia. Wishlist dan integrasi Detail Game sudah masuk lewat PR #8. | Lanjutkan PR per modul dan petakan commit/PR ke kontribusi individu di laporan. |
+| Frontend UTS | Semua route utama dan 404 sudah terdaftar. Cari Game dan Detail Game memakai CheapShark. Game Gratis memakai GamerPower lewat proxy. Wishlist dan nominal tabungan memakai `localStorage`. Home masih memakai deal mock, daftar giveaway statis, dan kurs tetap. Budget Planner masih memakai game mock. Form Kontak mensimulasikan pengiriman. | Pertahankan tampilan. Hubungkan Home ke data aktual, Budget ke Wishlist akun, Kontak ke backend, dan fitur simpan ke API terautentikasi. |
+| REST, backend, dan database | Ada proxy GamerPower di Vite dan fungsi serverless Vercel. Belum ada backend aplikasi, Prisma, migrasi, atau PostgreSQL. | Buat REST API NestJS, schema Prisma, migrasi Neon, serta satu resource CRUD milik masing-masing anggota. |
+| Validasi, sanitasi, error | Ada validasi UI dan beberapa loading/error state. Belum ada DTO, validasi server, dan format error backend bersama. | Terapkan validasi DTO global, sanitasi sesuai field, dan penanganan HTTP error. Lengkapi loading, empty, error, dan retry pada alur baru. |
+| Autentikasi, otorisasi, dan keamanan | Belum ada akun, JWT, atau pemeriksaan kepemilikan data. | Register/login JWT, guard, pemeriksaan kepemilikan di server, peran admin untuk tiket, hashing password, rate limit, dan CORS allowlist. |
+| Testing dan hasil cek awal | Belum ada Jest/Vitest atau suite tes di repo. `npm run build` berhasil di checkout lokal. `npm run lint` melaporkan 6 masalah yang sudah ada di About, Footer, dan NotFound. | Tambah Jest untuk backend dan uji alur terintegrasi. Bersihkan lint yang ada sebelum pengumpulan. |
+| Dokumentasi API dan laporan | `API-SPEC.md` kosong, README masih template Vite, dan `RUBRIK-Penilaian.md` berisi checklist QA frontend. | Sediakan Swagger/OpenAPI yang sesuai implementasi, README setup/deploy, serta laporan kelompok dan bukti individu yang merujuk spesifikasi final. |
+| Optimasi | Pencarian sudah memakai debounce, kurs memiliki cache, dan proxy GamerPower memiliki header cache. | Ukur baseline dan hasil akhir. Tambahkan cache serta timeout untuk data publik, pagination dan indeks DB untuk daftar akun, dan optimasi frontend berdasarkan pengukuran. |
+| Deployment | Proxy production Vercel ada di kode. URL production dan status deploy belum terverifikasi dalam audit repo ini. | Deploy frontend di Vercel, backend di Render, database di Neon, lalu verifikasi alur dari domain production. |
+| LLM | Belum ada provider, endpoint, atau alur UI LLM. | Satu integrasi provider di backend dan satu fitur LLM yang dipakai dari UI untuk setiap anggota. |
 
-| Tujuan | Indikator keberhasilan |
+## Kriteria penerimaan produk
+
+| Area | Perilaku yang harus bisa didemokan |
 | --- | --- |
-| Menemukan harga terbaik | Detail game menampilkan harga di semua toko, diurutkan dari termurah, dalam rupiah |
-| Merencanakan pembelian | Budget Planner menampilkan total wishlist dan estimasi bulan menabung dari uang jajan yang diisi |
-| Tidak melewatkan game gratis | Halaman Game Gratis menampilkan giveaway aktif dan bisa difilter per platform |
-| Memenuhi rubrik tugas besar | Ada validasi form, loading dan error state, komponen reusable, aksesibilitas, dan data API tampil di halaman |
-| Kerja tim rapi | Minimal 15 commit di repository, target 3 commit atau lebih per anggota, semua lewat pull request |
+| Akun dan Home | Pengguna dapat mendaftar, login, membuka profil, serta mengubah preferensi. Home menampilkan deal dan giveaway dari API. Kegagalan satu feed tidak mengosongkan bagian lain. Pengguna yang login dapat meminta ringkasan Home dari LLM. |
+| Cari Game | Pencarian berdasarkan judul, filter harga dan toko, debounce, dan empty state tetap bekerja. Pengguna login bisa membuat, membuka, mengubah, dan menghapus preset pencarian. LLM dapat menerjemahkan kalimat pencarian ke filter yang bisa diperiksa sebelum diterapkan. |
+| Detail Game dan Wishlist | Detail menampilkan harga normal/diskon antar toko dalam rupiah, diurutkan dari termurah, serta rekor harga terendah jika tersedia. Tambah/hapus Wishlist berfungsi dari Cari Game dan Detail Game. Halaman Wishlist menampilkan daftar milik akun, total perkiraan rupiah, dan edit catatan. User bisa meminta bantuan memilih prioritas dari daftar tersebut. Grafik bulanan hanya tampil jika datanya tersedia. |
+| Game Gratis | Giveaway aktif dapat difilter berdasarkan platform dan tipe. Pengguna login dapat menyimpan giveaway dan memperbarui status bookmark atau menghapusnya. LLM menyusun shortlist dari giveaway aktif yang dikirim server. Atribusi GamerPower tetap ada. |
+| Budget Planner | Total dihitung dari item Wishlist milik akun, dengan input nominal bulanan bilangan bulat positif. Estimasi adalah pembulatan ke atas dari total rupiah dibagi nominal bulanan. Wishlist kosong menghasilkan 0 bulan. Pengguna dapat menyimpan, membaca, mengubah, dan menghapus rencana. LLM menjelaskan hasil hitung aplikasi. |
+| Kontak/Tentang | Info tim dan sumber data tetap publik. Form untuk pengguna login menyimpan tiket. Pemilik dapat melihat tiketnya dan mengubah atau menghapus tiket yang belum diproses. Admin dapat meninjau dan memperbarui status. LLM menyarankan draf dari kategori dan pilihan masalah, lalu pengguna dapat menyunting sebelum mengirim. |
 
-## Target pengguna
+Tampilan mendukung HP dan laptop, fokus keyboard terlihat, dan field tetap punya label serta pesan error. Harga rupiah diberi label perkiraan dan tanggal kurs bila tersedia. Data akun tetap ada saat pengguna keluar, masuk kembali, atau memakai perangkat lain. Untuk data UTS di `localStorage`, sediakan impor atas tindakan pengguna setelah login pada perangkat lama, dengan pencegahan duplikat Wishlist. Isi browser tidak langsung dikaitkan dengan akun yang baru masuk.
 
-Pengguna utama adalah gamer PC di Indonesia, terutama pelajar dan mahasiswa yang punya uang jajan game terbatas dan membeli game lewat toko digital.
+## Arsitektur dan kontrak bersama
 
-Contoh persona: Rafi, mahasiswa yang bermain di PC. Ia ingin:
+- **Frontend:** pertahankan `src/` dan build Vite di root. Gunakan klien API bersama dengan `VITE_API_BASE_URL`, penanganan sesi, dan pesan error yang konsisten.
+- **Backend:** gunakan Node.js, NestJS + TypeScript, Prisma + Neon PostgreSQL, JWT, dan Jest. Taruh backend di `server/` agar deploy frontend dan backend bisa dipisah di repo yang sama. Paparkan REST di `/api/v1` dan Swagger/OpenAPI di `/docs`. Sediakan endpoint health check yang tidak membuka detail internal.
+- **Data publik:** backend menyediakan adapter CheapShark, GamerPower, dan Frankfurter. Pindahkan pemanggilan halaman secara bertahap ke backend. Gunakan timeout dan cache berbatas waktu untuk respons publik. Pertahankan logika fallback UI saat provider gagal dan dokumentasikan kapan proxy GamerPower lama bisa dilepas.
+- **Data akun:** model utama `User`, `PlayerProfile`, `WishlistItem`, `SearchPreset`, `BudgetPlan`, `GiveawayBookmark`, dan `ContactTicket`. Setiap resource pribadi terkait `userId`. Gunakan constraint unik untuk profil per user, wishlist per game per user, dan bookmark per giveaway per user. Simpan harga snapshot Wishlist dalam USD; konversi saat tampil. Simpan nominal budget sebagai rupiah bulat.
+- **REST:** gunakan `POST` untuk membuat (201), `GET` untuk membaca (200), `PATCH` untuk mengubah (200), dan `DELETE` untuk menghapus (204). Untuk kegagalan gunakan 400 input tidak valid, 401 sesi tidak valid, 403 akses admin ditolak, 404 resource tidak ditemukan atau bukan milik peminta, dan 409 untuk konflik seperti duplikasi. Gunakan 429 saat batas permintaan tercapai dan status 5xx yang sesuai untuk kegagalan upstream. Error memakai format bersama `{ code, message, details? }`.
+- **Validasi dan otorisasi:** DTO memvalidasi tipe, batas panjang, angka, enum, dan query. Terapkan allowlist field, rapikan input teks, tolak properti asing, dan render konten sebagai teks. Hash password, tetapkan masa berlaku JWT, dan verifikasi JWT lewat guard untuk endpoint pribadi. Ambil identitas dari token, bukan body permintaan. Role admin hanya ditetapkan lewat prosedur backend. Gunakan query Prisma berbasis pemilik dan jangan log token, password, atau input kontak.
+- **LLM:** mulai dengan Groq melalui satu service backend yang dipakai semua modul, dengan model yang dapat disetel lewat environment. Tiap fitur punya input dan format keluaran terdefinisi, tombol pemicu di UI, penanganan timeout/error, serta validasi keluaran. Batasi jumlah data dan permintaan per akun. Kirim hanya data yang diperlukan, tanpa email, password, token, catatan pribadi, atau isi tiket. Angka, harga, rekomendasi yang merujuk ID, dan tautan tetap bersumber dari data aplikasi. Aksi simpan, kirim, dan ubah data tetap memerlukan tindakan pengguna. CRUD tetap berfungsi saat provider LLM gagal.
+- **Deployment:** Vercel untuk frontend dan rewrite SPA, Render Web Service untuk backend, Neon untuk PostgreSQL. Simpan `DATABASE_URL`, `JWT_SECRET`, dan `GROQ_API_KEY` di Render. Tambahkan `.env.example` tanpa nilai rahasia dan pastikan file `.env` nyata diabaikan Git. Batasi CORS ke origin frontend yang disetujui dan jalankan migrasi Prisma saat rilis sebelum aplikasi menerima traffic.
 
-- melihat harga game langsung dalam rupiah,
-- tahu toko mana yang paling murah hari ini,
-- tahu kapan wishlist-nya bisa terbeli dari uang jajan bulanan,
-- tidak ketinggalan game yang sedang dibagikan gratis.
+## Pembagian tugas untuk pengumpulan akhir
 
-## Ruang lingkup
+Setiap anggota memiliki satu alur CRUD lengkap yang digunakan dari frontend, satu fitur LLM yang bisa didemokan, dan tanggung jawab kelompok. Penugasan melanjutkan kepemilikan fitur saat UTS.
 
-Versi pertama mencakup tujuh halaman dan tiga API, tanpa akun pengguna dan tanpa backend.
-
-| Termasuk | Tidak termasuk |
-| --- | --- |
-| Tujuh halaman: Home, Cari Game, Detail Game, Game Gratis, Wishlist, Budget Planner, Kontak/Tentang | Login, akun pengguna, dan database |
-| Harga game PC dari CheapShark, ditampilkan dalam rupiah | Pembelian langsung di aplikasi |
-| Wishlist dan budget tersimpan di localStorage | Notifikasi harga atau email pengingat |
-| Tampilan responsif untuk HP dan laptop | Game konsol dan platform di luar data CheapShark |
-| Antarmuka berbahasa Indonesia | Pilihan bahasa lain dan mode offline |
-
-## Kebutuhan fungsional
-
-Setiap halaman punya satu tujuan pengguna dan kriteria penerimaan yang bisa dicek anggota tim saat review pull request.
-
-| Halaman | Sebagai pengguna, saya ingin... | Kriteria penerimaan |
-| --- | --- | --- |
-| Home | melihat deal terbaik hari ini dan ringkasan game gratis | Deal teratas dari CheapShark tampil sebagai kartu dengan harga rupiah dan badge diskon. Beberapa giveaway terbaru dari GamerPower tampil di bawahnya. Jika satu API gagal, bagian lain tetap tampil. |
-| Cari Game | mencari game dan menyaring hasilnya | Pencarian berdasarkan judul, filter rentang harga dan toko, pencarian menunggu pengguna berhenti mengetik sebelum memanggil API, dan ada tampilan khusus saat hasil kosong. |
-| Detail Game | membandingkan harga antar toko | Harga di setiap toko dalam rupiah, diurutkan dari termurah, dengan harga normal dan harga diskon. Ada tombol tambah dan hapus wishlist. |
-| Game Gratis | melihat game yang sedang dibagikan gratis | Daftar giveaway aktif, filter platform dan tipe, dan atribusi GamerPower di footer. |
-| Wishlist | menyimpan game yang ingin dibeli | Daftar game tersimpan, total harga dalam rupiah, hapus item, data tetap ada setelah halaman dimuat ulang, dan bisa dioperasikan dengan keyboard. |
-| Budget Planner | tahu berapa bulan menabung untuk wishlist | Form uang jajan per bulan (wajib diisi, angka lebih dari 0), pesan error di bawah field, dan hasil berupa total wishlist serta estimasi bulan menabung. |
-| Kontak/Tentang | menghubungi tim dan tahu sumber data | Form nama, email, dan pesan dengan validasi, pesan sukses setelah dikirim (disimulasikan, tanpa backend), serta info tim dan sumber data. |
-
-Estimasi bulan menabung dihitung dengan rumus berikut, dibulatkan ke atas. Jika wishlist kosong, hasilnya 0.
-
-```math
-\text{bulan menabung} = \left\lceil \frac{\text{total wishlist (Rp)}}{\text{uang jajan per bulan (Rp)}} \right\rceil
-```
-
-## Kebutuhan non-fungsional
-
-Bagian ini sekaligus menjadi checklist rubrik tugas besar.
-
-- **Loading dan error state:** setiap pemanggilan API punya skeleton saat memuat dan pesan error dengan tombol coba lagi. Kegagalan satu API tidak boleh mengosongkan seluruh halaman.
-- **Validasi form:** Budget Planner dan Kontak memvalidasi input sebelum diproses dan menampilkan pesan error yang jelas.
-- **Komponen reusable:** kartu game, badge diskon, label harga rupiah, serta komponen loading dan error dipakai di lebih dari satu halaman.
-- **Aksesibilitas:** seluruh fitur utama bisa dioperasikan dengan keyboard, setiap field form punya label, dan gambar punya teks alternatif.
-- **Responsif:** tampilan nyaman di layar HP dan laptop.
-- **Performa:** kurs USD ke IDR disimpan sementara di memori karena hanya berubah harian, dan pencarian tidak memanggil API di setiap ketikan.
-- **Kejujuran data:** harga rupiah ditandai sebagai perkiraan beserta tanggal kurs, karena dihitung dari kurs Bank Sentral Eropa, bukan kurs toko.
-
-## Arsitektur teknis
-
-Aplikasi berupa single-page app React yang dibangun dengan Vite, memakai React Router untuk perpindahan halaman. Halaman tidak memanggil API langsung: semua pemanggilan lewat fungsi di folder `services`, sehingga format URL dan penanganan error hanya ada di satu tempat.
-
-```mermaid
-flowchart LR
-    P["Halaman React<br/>Home, Cari Game, Detail Game,<br/>Game Gratis, Wishlist,<br/>Budget Planner, Kontak/Tentang"]
-    LS[("localStorage<br/>wishlist, budget")]
-    S1["services/cheapshark.js"]
-    S2["services/frankfurter.js"]
-    S3["services/gamerpower.js"]
-    A1["CheapShark API<br/>harga dan deal (USD)"]
-    A2["Frankfurter API<br/>kurs USD ke IDR"]
-    PX["Proxy CORS<br/>Vite dev atau serverless"]
-    A3["GamerPower API<br/>giveaway game gratis"]
-    P --> S1 --> A1
-    P --> S2 --> A2
-    P --> S3 --> PX --> A3
-    P <-->|baca dan tulis| LS
-```
-
-Halaman hanya berbicara dengan folder services, dan hanya GamerPower yang melewati proxy karena masalah CORS.
-
-| API | Fungsi | Catatan |
-| --- | --- | --- |
-| CheapShark | Harga dan deal game PC (USD) | Tanpa API key. Endpoint yang dipakai: `/deals`, `/games`, `/stores`. Dokumentasi di apidocs.cheapshark.com. |
-| Frankfurter | Kurs USD ke IDR | Tanpa API key, data Bank Sentral Eropa, diperbarui harian. Cek versi API di frankfurter.dev sebelum menulis service. |
-| GamerPower | Giveaway game gratis | Tanpa API key, wajib mencantumkan GamerPower sebagai sumber di footer. CORS kemungkinan diblokir, jadi lewat proxy. |
-
-Sebelum mulai coding, ketiga API dites dengan `fetch` dari DevTools console browser untuk memastikan mana yang butuh proxy.
-
-**Data di localStorage.** Wishlist menyimpan ID game, judul, gambar, dan harga terakhir dalam USD. Harga rupiah dihitung saat ditampilkan supaya selalu mengikuti kurs terbaru. Budget menyimpan satu angka uang jajan per bulan.
-
-**Struktur folder.**
-
-```text
-src/
-  components/   GameCard, DiscountBadge, PriceIDR, Loading, ErrorState
-  pages/        Home, Search, GameDetail, FreeGames, Wishlist, Budget, About
-  services/     cheapshark.js, frankfurter.js, gamerpower.js
-  hooks/        useWishlist, useBudget, useExchangeRate
-  utils/        formatRupiah, hitungBulanMenabung
-  App.jsx       routing
-```
-
-## Risiko dan mitigasi
-
-Risiko terbesar adalah CORS pada GamerPower, karena bisa mengosongkan halaman Game Gratis.
-
-| Risiko | Dampak | Mitigasi |
-| --- | --- | --- |
-| `fetch` ke GamerPower diblokir browser (CORS) | Halaman Game Gratis dan ringkasan di Home kosong | Proxy di dev server Vite saat development, serverless function (Vercel atau Netlify) saat deploy. Cadangan terakhir: salinan JSON di folder project yang tetap di-fetch. |
-| Frankfurter punya lebih dari satu versi API | Format URL salah dan kurs tidak terbaca | Baca dokumentasi di frankfurter.dev dulu, dan hanya satu fungsi di `services/frankfurter.js` yang memanggilnya. |
-| CheapShark lambat atau gagal | Home dan Cari Game kosong | Skeleton, pesan error dengan tombol coba lagi, dan pencarian yang menunggu pengguna berhenti mengetik. |
-| Konflik git di `App.jsx`, routing, dan style global | Merge conflict yang menghambat 6 anggota | Kerangka project di-push ke `main` lebih dulu, satu orang pemilik routing, branch per fitur, pull request wajib. |
-| Kurs ECB berbeda dari kurs toko | Harga rupiah sedikit meleset | Tampilkan label perkiraan dan tanggal kurs di setiap harga rupiah. |
-
-## Pembagian tugas
-
-Setiap anggota memegang satu halaman utama ditambah satu paket service, hook, atau komponen. Bebannya merata, dan tiap orang punya area kode sendiri sehingga konflik git berkurang.
-
-| Anggota | Peran | Halaman | Service, hook, dan komponen |
+| Anggota | Backend dan CRUD Prisma | Frontend dan fitur LLM individu | Tanggung jawab kelompok dan bukti utama |
 | --- | --- | --- | --- |
-| Rifky | Koordinator, detail, dan wishlist | Detail Game, Wishlist | Tabel harga antar toko, `useWishlist` (localStorage), tombol tambah dan hapus wishlist, review pull request |
-| Affan | Data game | Cari Game | `services/cheapshark.js` (deals, games, stores), GameCard, DiscountBadge |
-| Raken | Fondasi dan tampilan | Home | Setup Vite dan React, React Router, layout dan navbar, komponen Loading dan ErrorState, deploy |
-| Ibnu | Budget dan kurs | Budget Planner | `services/frankfurter.js`, `useExchangeRate` (dengan cache), `formatRupiah`, PriceIDR, `useBudget`, `hitungBulanMenabung` |
-| Fattan | Game gratis | Game Gratis | `services/gamerpower.js`, proxy CORS, filter platform dan tipe |
-| Rosa | Kontak, footer, dan dokumentasi | Kontak/Tentang, halaman 404 | Validasi form Kontak, footer dengan atribusi GamerPower, README, pengecekan akhir responsif dan aksesibilitas |
+| **Rifky** | `WishlistItem` di `/wishlist-items`: tambah game, baca daftar/item, edit catatan, hapus. Validasi ID game, cegah duplikasi, dan batasi akses ke pemilik. | Migrasikan Wishlist dan tombol simpan di Detail/Cari Game. Buat bantuan prioritas pembelian dari harga yang tersedia, lewat `POST /wishlist-items/ai/priorities`. | Koordinasi dan review PR, susun demo integrasi, cek duplikasi dan akses lintas akun. |
+| **Affan** | `SearchPreset` di `/search-presets`: simpan, baca, ubah, hapus preset filter milik akun. Rawat adapter CheapShark untuk pencarian, daftar toko, dan detail. | Hubungkan CRUD preset ke Cari Game. Buat filter dari kalimat pengguna lewat `POST /search-presets/ai/filters` dengan validasi rentang harga dan toko yang tersedia. | Ukur dampak debounce dan cache katalog terhadap jumlah request. Uji filter invalid serta kegagalan CheapShark. |
+| **Raken** | `PlayerProfile` di `/profiles`: buat, baca, ubah, hapus profil game milik akun. Bangun kerangka NestJS, JWT, guard, dan konfigurasi CORS. | Buat Register, Login, pengaturan profil, dan Home dengan data API. Buat ringkasan deal/giveaway dari data Home lewat `POST /profiles/ai/home-summary`. | Deploy Render dan Vercel, atur environment serta rewrite SPA, dan dokumentasikan verifikasi login serta route production. |
+| **Ibnu** | `BudgetPlan` di `/budget-plans`: buat, baca, ubah, hapus rencana milik akun. Hitung estimasi dari Wishlist dan kurs yang konsisten. | Sambungkan Budget Planner ke Wishlist akun dan rencana tersimpan. Buat penjelasan hasil simulasi lewat `POST /budget-plans/ai/explain` dari angka hitung server. | Siapkan Neon dan migrasi Prisma bersama Raken. Uji pembulatan, wishlist kosong, nominal invalid, dan ukur cache kurs. |
+| **Fattan** | `GiveawayBookmark` di `/giveaway-bookmarks`: simpan, baca, ubah status (misalnya diincar/diklaim), hapus. Pindahkan akses GamerPower ke backend. | Hubungkan bookmark ke Game Gratis. Buat rekomendasi giveaway lewat `POST /giveaway-bookmarks/ai/picks`, hanya dari item yang masih aktif dan sesuai platform. | Siapkan service LLM bersama dan konfigurasi provider di Render bersama Raken. Uji kegagalan GamerPower/LLM, dan ukur cache feed. |
+| **Rosa** | `ContactTicket` di `/contact-tickets`: buat dan baca tiket, ubah atau hapus tiket milik sendiri sebelum diproses. Tambah akses admin untuk tinjau dan ubah status. | Hubungkan Kontak ke tiket tersimpan dan tampilkan status. Buat asisten draf lewat `POST /contact-tickets/ai/draft` dari pilihan kategori dan masalah tanpa mengirim isi pesan pribadi. | Rawat Swagger/OpenAPI, README, dan laporan. Pimpin QA responsif dan aksesibilitas, perbaiki lint awal, serta uji status tiket dan batas akses admin. |
 
-**Urutan pengerjaan** supaya tidak saling menunggu:
+Path di tabel relatif terhadap `/api/v1`. Setiap pemilik modul mendokumentasikan endpoint-nya di Swagger dan menjalankan tes modulnya pada alamat production. Anggota yang memegang deployment bersama mencatat konfigurasi infrastrukturnya di README.
 
-1. Raken mengirim kerangka project ke `main` lebih dulu, termasuk layout, navbar, Loading, dan ErrorState, baru anggota lain membuat branch.
-2. Service dikerjakan paling awal karena dipakai banyak halaman: `cheapshark.js` (Affan), `frankfurter.js`, `formatRupiah`, dan PriceIDR (Ibnu), `gamerpower.js` dan proxy (Fattan).
-3. Rifky membuat `useWishlist` lebih dulu, lalu memakainya di Detail Game dan Wishlist. Ibnu memakai `useWishlist` untuk menghitung total di Budget Planner.
-4. Rosa bisa langsung mulai dari Kontak/Tentang, halaman 404, dan footer karena tidak bergantung pada service lain.
-5. Home (Raken) dirakit paling akhir karena memakai GameCard dari Affan dan data GamerPower dari Fattan.
+## Milestone dan dependensi
 
-Tiap anggota membuat minimal 3 commit lewat pull request sendiri, sehingga total commit melewati syarat 15.
+1. **Fondasi bersama.** Raken menyiapkan NestJS, registrasi/login, guard, format error, dan CORS. Ibnu dan Raken menyiapkan schema awal, Neon, dan migrasi. Fattan menyiapkan kontrak service LLM, Rosa menyiapkan struktur OpenAPI serta laporan, dan Rifky mengoordinasi kesepakatan kontrak sebelum modul bergantung satu sama lain.
+2. **Fitur per anggota.** Tiap pemilik mengerjakan schema & migrasi, REST CRUD, validasi, otorisasi, UI, dan satu fitur LLM. Kerjakan tes dengan mock untuk provider eksternal. Review dan gabungkan migrasi secara berurutan untuk mengurangi konflik di schema bersama.
+3. **Integrasi.** Rangkai Cari Game → Detail Game → Wishlist → Budget Planner. Uji alur kedua akun dengan data terpisah, muat ulang halaman, serta kegagalan provider. Jalankan build, lint, dan tes. Ukur optimasi sebelum dan sesudah dengan kondisi yang sama.
+4. **Rilis dan pengumpulan paling lambat 20 Desember 2026.** Jalankan migrasi production, deploy Render dan Vercel, lalu verifikasi Swagger, health check, login, CRUD, dan LLM dari UI production. Lengkapi README dan laporan dengan hasil yang benar-benar diuji.
 
-## Alur kerja tim dan milestone
+## Bukti yang harus dikumpulkan
 
-Branch `main` diproteksi: semua perubahan masuk lewat pull request yang di-review minimal satu anggota lain. Nama branch memakai pola `feat/nama-fitur`, dan pesan commit memakai awalan `feat:`, `fix:`, atau `style:`. Pembagian tugas per anggota ada di bagian Pembagian tugas.
+**Kelompok (20%).** Link repo serta riwayat PR, laporan berisi pembagian kerja dan integrasi tiap modul, link frontend/backend/Swagger, bukti migrasi database dan alur production tanpa membocorkan kredensial, serta hasil build, lint, tes, dan pengukuran optimasi. Dalami QA UI dengan checklist `RUBRIK-Penilaian.md` yang sudah ada.
 
-**Definition of Done** untuk setiap fitur:
+**Individu (80%).** Per anggota, cantumkan link commit/PR, penjelasan resource CRUD dan UI-nya, hasil tes Jest, contoh 400/401/403 atau 404 yang relevan, bukti satu optimasi yang terukur, dan screenshot/demo fitur LLM yang berjalan di production. Pengujian modul minimal mencakup CRUD berhasil, input salah, pengunjung tanpa sesi, akses lintas akun, serta keluaran LLM valid dan kegagalan provider dengan mock. Screenshot/API output yang dipakai sebagai bukti harus memakai akun dan data demo.
 
-- [ ] Sesuai kriteria penerimaan di bagian Kebutuhan fungsional
-- [ ] Ada loading state dan error state
-- [ ] Tampil baik di layar HP dan laptop
-- [ ] Bisa dioperasikan dengan keyboard
-- [ ] Tidak ada error di console browser
-- [ ] Pull request sudah di-review dan di-merge ke `main`
-
-**Milestone** (tanggal diisi tim setelah tenggat tugas diketahui):
-
-1. Fondasi: setup Vite dan React, routing, layout, tes ketiga API, proxy GamerPower, dan komponen dasar.
-2. Halaman inti: Home, Cari Game, Detail Game, dan Game Gratis.
-3. Fitur pengguna: Wishlist, Budget Planner, dan Kontak/Tentang.
-4. Penyelesaian: aksesibilitas, responsif, state error, README, dan deploy.
-
-## Pertanyaan terbuka
-
-- [ ] Apakah setiap anggota setuju dengan pembagian tugasnya?
-- [ ] Kapan tenggat tugas besar, dan apakah hasil akhir wajib di-deploy online?
-- [ ] Styling memakai CSS biasa, CSS Modules, atau Tailwind?
-- [ ] Proxy GamerPower cukup di dev server Vite, atau perlu serverless function agar jalan setelah deploy
+Pertahankan kebiasaan proyek memakai branch per fitur dan review anggota lain sebelum merge. Minimal tiga commit bermakna per anggota dan 15 commit total tetap menjadi target internal dari PRD lama. Konfirmasi format laporan resmi dan kanal pengumpulan saat panduan kelas tersedia.
