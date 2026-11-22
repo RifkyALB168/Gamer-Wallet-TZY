@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "Node16",
+    "target": "ES2023",
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts"]
+}
