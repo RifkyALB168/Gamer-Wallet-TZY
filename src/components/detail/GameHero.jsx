@@ -12,9 +12,12 @@ import PriceIDR from "../PriceIDR";
  * @param {number|null} props.rate kurs 1 USD dalam rupiah
  * @param {string|null} props.tanggalKurs tanggal kurs dari sumber
  * @param {boolean} props.inWishlist
+ * @param {boolean} props.wishlistDisabled
  * @param {() => void} props.onToggleWishlist
  */
-export function GameHero({ game, dealTermurah, rate, tanggalKurs, inWishlist, onToggleWishlist }) {
+export function GameHero({
+  game, dealTermurah, rate, tanggalKurs, inWishlist, wishlistDisabled, onToggleWishlist,
+}) {
   const judulLengkap = game.edisi ? `${game.judul}: ${game.edisi}` : game.judul;
 
   const statistik = [
@@ -117,8 +120,9 @@ export function GameHero({ game, dealTermurah, rate, tanggalKurs, inWishlist, on
             <button
               type="button"
               aria-pressed={inWishlist}
+              disabled={wishlistDisabled}
               onClick={onToggleWishlist}
-              className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 ${
+              className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 disabled:cursor-not-allowed disabled:opacity-60 ${
                 inWishlist
                   ? "bg-stone-800 text-emerald-300 hover:bg-stone-700"
                   : "bg-emerald-400 text-stone-950 hover:bg-emerald-300"

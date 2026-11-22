@@ -7,6 +7,7 @@ import PriceIDR from "./PriceIDR";
  * @param {number|null} props.rate
  * @param {string} [props.namaToko]
  * @param {boolean} [props.inWishlist]
+ * @param {boolean} [props.wishlistDisabled]
  * @param {(game: object) => void} [props.onDetail]
  * @param {(game: object) => void} [props.onToggleWishlist]
  */
@@ -15,6 +16,7 @@ export function GameCard({
   rate,
   namaToko,
   inWishlist = false,
+  wishlistDisabled = false,
   onDetail,
   onToggleWishlist,
 }) {
@@ -88,8 +90,9 @@ export function GameCard({
           <button
             type="button"
             aria-pressed={inWishlist}
+            disabled={wishlistDisabled}
             onClick={() => onToggleWishlist?.(game)}
-            className={`rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-emerald-400 ${
+            className={`rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-emerald-400 disabled:cursor-not-allowed disabled:opacity-60 ${
               inWishlist
                 ? "bg-emerald-400 text-stone-950 hover:bg-emerald-300"
                 : "bg-stone-800 text-gray-100 hover:bg-stone-700"

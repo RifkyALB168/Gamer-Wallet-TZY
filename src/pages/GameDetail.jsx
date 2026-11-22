@@ -4,6 +4,7 @@ import GameHero from "../components/detail/GameHero";
 import MiniBudgetCard from "../components/detail/MiniBudgetCard";
 import PriceHistoryCard from "../components/detail/PriceHistoryCard";
 import StorePriceTable from "../components/detail/StorePriceTable";
+import WishlistStatus from "../components/wishlist/WishlistStatus";
 import { useExchangeRate } from "../hooks/useExchangeRate";
 import { useGameDetail } from "../hooks/useGameDetail";
 import { useWishlist } from "../hooks/useWishlist";
@@ -59,7 +60,7 @@ function GagalMuat({ pesan, onCobaLagi }) {
 export function GameDetail({ gameId }) {
   const { game, loading, error, cobaLagi } = useGameDetail(gameId);
   const { rate, date } = useExchangeRate();
-  const { ada, toggle } = useWishlist();
+  const wishlist = useWishlist();
 
   const deals = game ? urutkanDeal(game.deals) : [];
   const dealTermurah = deals[0];
@@ -73,20 +74,15 @@ export function GameDetail({ gameId }) {
   } else {
     isi = (
       <>
+        <WishlistStatus {...wishlist} />
         <GameHero
           game={game}
           dealTermurah={dealTermurah}
           rate={rate}
           tanggalKurs={date}
-          inWishlist={ada(game.id)}
-          onToggleWishlist={() =>
-            toggle({
-              id: game.id,
-              judul: judulLengkap,
-              cover: game.thumb,
-              hargaUsd: dealTermurah.hargaUsd,
-            })
-          }
+          inWishlist={wishlist.ada(game.id)}
+          wishlistDisabled={wishlist.status !== "ready" || Boolean(wishlist.busy)}
+          onToggleWishlist={() => wishlist.toggle(game.id)}
         />
 
         <div className="mt-8 grid items-start gap-6 lg:grid-cols-[1fr_340px]">
