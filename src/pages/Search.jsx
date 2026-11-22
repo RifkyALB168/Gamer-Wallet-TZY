@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar";
 import PriceFilter from "../components/search/PriceFilter";
 import SearchBar from "../components/search/SearchBar";
 import StoreFilter from "../components/search/StoreFilter";
+import WishlistStatus from "../components/wishlist/WishlistStatus";
 import { useDebounce } from "../hooks/useDebounce";
 import { useDeals } from "../hooks/useDeals";
 import { useExchangeRate } from "../hooks/useExchangeRate";
@@ -22,7 +23,7 @@ import {
 
 export function Search() {
   const navigate = useNavigate();
-  const { ada, toggle } = useWishlist();
+  const wishlist = useWishlist();
 
   // Pilihan pengguna
   const [kataKunci, setKataKunci] = useState("");
@@ -147,6 +148,7 @@ export function Search() {
               )}
             </h2>
 
+            <WishlistStatus {...wishlist} />
             <div aria-live="polite">
               {/* 1. Sedang memuat */}
               {loading && (
@@ -203,8 +205,9 @@ export function Search() {
                         game={game}
                         rate={rate}
                         namaToko={namaToko[game.storeId]}
-                        inWishlist={ada(game.id)}
-                        onToggleWishlist={toggle}
+                        inWishlist={wishlist.ada(game.id)}
+                        wishlistDisabled={wishlist.status !== "ready" || Boolean(wishlist.busy)}
+                        onToggleWishlist={(selected) => wishlist.toggle(selected.id)}
                         onDetail={(g) => navigate(`/game/${g.id}`)}
                       />
                     </li>
